@@ -22,22 +22,8 @@ box-shadow:0 0 12px grey;
 
 h1{text-align:center;}
 
-.question{display:none; margin-top:20px;}
+.section{display:none;}
 .active{display:block;}
-
-.progress{
-background:#ddd;
-height:20px;
-border-radius:20px;
-margin-bottom:20px;
-}
-
-.progress-bar{
-height:20px;
-background:#2c7be5;
-border-radius:20px;
-width:0%;
-}
 
 button{
 margin-top:20px;
@@ -48,32 +34,31 @@ border:none;
 border-radius:5px;
 cursor:pointer;
 }
+
+input, select{
+margin-top:5px;
+margin-bottom:10px;
+width:100%;
+padding:5px;
+}
+
 </style>
 
 <script>
 
 let current = 0;
 
-function showQuestion(index){
-let q = document.getElementsByClassName("question");
-for(let i=0;i<q.length;i++){ q[i].classList.remove("active"); }
-q[index].classList.add("active");
-
-let progress = ((index)/(q.length-1))*100;
-document.getElementById("progressBar").style.width = progress + "%";
+function showSection(index){
+let sections = document.getElementsByClassName("section");
+for(let i=0;i<sections.length;i++){
+sections[i].classList.remove("active");
+}
+sections[index].classList.add("active");
 }
 
-function nextQuestion(){
+function nextSection(){
 current++;
-let total = document.getElementsByClassName("question").length;
-
-if(current < total){
-showQuestion(current);
-}else{
-submitSurvey();
-document.getElementById("form").style.display="none";
-document.getElementById("end").style.display="block";
-}
+showSection(current);
 }
 
 function submitSurvey(){
@@ -85,6 +70,7 @@ income: document.getElementById("income").value,
 residence: document.querySelector('input[name="residence"]:checked')?.value,
 household: document.getElementById("household").value,
 vehicles: document.getElementById("vehicles").value,
+
 waterSource: document.getElementById("waterSource").value,
 waterReliability: document.querySelector('input[name="waterReliability"]:checked')?.value,
 drainage: document.querySelector('input[name="drainage"]:checked')?.value,
@@ -97,8 +83,8 @@ suggestion: document.getElementById("suggestion").value
 
 };
 
-fetch("https://script.google.com/macros/s/AKfycbxkKvixHyR_nsvm4J2r_UfxuSIqpOcLnoBuJFMk8sbEQDZFDGepcFmXDaVQS-7NU6Rm/exec", {
-method: "POST",
+fetch("https://script.google.com/macros/s/AKfycbxfAHlHrZqWF1qtiked91b7WBRmuRjOO3P6i31ijXLfBBKMDcQk5tP-tv63hm36L-p9aA/exec", {
+method:"POST",
 body: JSON.stringify(data)
 });
 
@@ -107,7 +93,7 @@ alert("Response submitted successfully!");
 }
 
 window.onload = function(){
-showQuestion(0);
+showSection(0);
 }
 
 </script>
@@ -120,15 +106,13 @@ showQuestion(0);
 
 <h1>Urban Infrastructure Survey</h1>
 
-<div class="progress">
-<div id="progressBar" class="progress-bar"></div>
-</div>
+<!-- SECTION 1: DEMOGRAPHICS -->
 
-<div id="form">
+<div class="section">
 
-<!-- Q1 -->
-<div class="question">
-<p>Age</p>
+<h3>Basic Information</h3>
+
+<label>Age</label>
 <select id="age">
 <option value="">Select</option>
 <option>18-25</option>
@@ -136,12 +120,8 @@ showQuestion(0);
 <option>41-60</option>
 <option>60+</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
-</div>
 
-<!-- Q2 -->
-<div class="question">
-<p>Income</p>
+<label>Income</label>
 <select id="income">
 <option value="">Select</option>
 <option><25000</option>
@@ -149,32 +129,20 @@ showQuestion(0);
 <option>50000-100000</option>
 <option>>100000</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
-</div>
 
-<!-- Q3 -->
-<div class="question">
-<p>Residence</p>
-<input type="radio" name="residence" value="Owned">Owned<br>
-<input type="radio" name="residence" value="Rented">Rented<br>
-<button onclick="nextQuestion()">Next</button>
-</div>
+<label>Residence</label>
+<input type="radio" name="residence" value="Owned"> Owned
+<input type="radio" name="residence" value="Rented"> Rented
 
-<!-- Q4 -->
-<div class="question">
-<p>Household size</p>
+<label>Household size</label>
 <select id="household">
 <option value="">Select</option>
 <option>1-2</option>
 <option>3-5</option>
 <option>6+</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
-</div>
 
-<!-- Q5 -->
-<div class="question">
-<p>Vehicles</p>
+<label>Vehicles</label>
 <select id="vehicles">
 <option value="">Select</option>
 <option>0</option>
@@ -182,86 +150,94 @@ showQuestion(0);
 <option>2</option>
 <option>3+</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
+
+<button onclick="nextSection()">Next</button>
+
 </div>
 
-<!-- Q6 -->
-<div class="question">
-<p>Water source</p>
+<!-- SECTION 2 -->
+
+<div class="section">
+
+<h3>Water Supply</h3>
+
+<label>Water Source</label>
 <select id="waterSource">
 <option value="">Select</option>
 <option>Piped</option>
 <option>Borewell</option>
 <option>Tanker</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
+
+<label>Water Reliability</label>
+<input type="radio" name="waterReliability" value="Poor"> Poor
+<input type="radio" name="waterReliability" value="Average"> Average
+<input type="radio" name="waterReliability" value="Good"> Good
+
+<button onclick="nextSection()">Next</button>
+
 </div>
 
-<!-- Q7 -->
-<div class="question">
-<p>Water reliability</p>
-<input type="radio" name="waterReliability" value="Poor">Poor
-<input type="radio" name="waterReliability" value="Average">Average
-<input type="radio" name="waterReliability" value="Good">Good
-<button onclick="nextQuestion()">Next</button>
-</div>
+<!-- SECTION 3 -->
 
-<!-- Q8 -->
-<div class="question">
-<p>Drainage condition</p>
-<input type="radio" name="drainage" value="Poor">Poor
-<input type="radio" name="drainage" value="Average">Average
-<input type="radio" name="drainage" value="Good">Good
-<button onclick="nextQuestion()">Next</button>
-</div>
+<div class="section">
 
-<!-- Q9 -->
-<div class="question">
-<p>Waterlogging frequency</p>
+<h3>Drainage</h3>
+
+<label>Drainage Condition</label>
+<input type="radio" name="drainage" value="Poor"> Poor
+<input type="radio" name="drainage" value="Average"> Average
+<input type="radio" name="drainage" value="Good"> Good
+
+<label>Waterlogging</label>
 <select id="waterlogging">
 <option value="">Select</option>
 <option>Never</option>
 <option>Occasional</option>
 <option>Frequent</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
+
+<button onclick="nextSection()">Next</button>
+
 </div>
 
-<!-- Q10 -->
-<div class="question">
-<p>Road condition</p>
-<input type="radio" name="road" value="Poor">Poor
-<input type="radio" name="road" value="Average">Average
-<input type="radio" name="road" value="Good">Good
-<button onclick="nextQuestion()">Next</button>
-</div>
+<!-- SECTION 4 -->
 
-<!-- Q11 -->
-<div class="question">
-<p>Waste collection</p>
+<div class="section">
+
+<h3>Road & Waste</h3>
+
+<label>Road Condition</label>
+<input type="radio" name="road" value="Poor"> Poor
+<input type="radio" name="road" value="Average"> Average
+<input type="radio" name="road" value="Good"> Good
+
+<label>Waste Collection</label>
 <select id="waste">
 <option value="">Select</option>
 <option>Daily</option>
 <option>Irregular</option>
 <option>None</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
+
+<button onclick="nextSection()">Next</button>
+
 </div>
 
-<!-- Q12 -->
-<div class="question">
-<p>Overall satisfaction</p>
+<!-- SECTION 5 -->
+
+<div class="section">
+
+<h3>Overall Feedback</h3>
+
+<label>Satisfaction</label>
 <input type="radio" name="satisfaction" value="1">1
 <input type="radio" name="satisfaction" value="2">2
 <input type="radio" name="satisfaction" value="3">3
 <input type="radio" name="satisfaction" value="4">4
 <input type="radio" name="satisfaction" value="5">5
-<button onclick="nextQuestion()">Next</button>
-</div>
 
-<!-- Q13 -->
-<div class="question">
-<p>Main issue</p>
+<label>Main Issue</label>
 <select id="issue">
 <option value="">Select</option>
 <option>Water</option>
@@ -269,20 +245,12 @@ showQuestion(0);
 <option>Road</option>
 <option>Waste</option>
 </select>
-<button onclick="nextQuestion()">Next</button>
-</div>
 
-<!-- Q14 -->
-<div class="question">
-<p>Suggestion</p>
+<label>Suggestion</label>
 <input type="text" id="suggestion">
-<button onclick="nextQuestion()">Submit</button>
-</div>
 
-</div>
+<button onclick="submitSurvey()">Submit</button>
 
-<div id="end" style="display:none;">
-<h2>Thank you!</h2>
 </div>
 
 </div>
