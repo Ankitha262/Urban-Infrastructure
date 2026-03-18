@@ -1,1 +1,309 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+<title>Urban Infrastructure Survey</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#eef2f5;
+padding:30px;
+}
+
+.container{
+background:white;
+width:750px;
+margin:auto;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 12px grey;
+}
+
+h1{
+text-align:center;
+}
+
+.question{
+display:none;
+margin-top:20px;
+}
+
+.active{
+display:block;
+}
+
+.progress{
+background:#ddd;
+height:20px;
+border-radius:20px;
+margin-bottom:20px;
+}
+
+.progress-bar{
+height:20px;
+background:#2c7be5;
+border-radius:20px;
+width:0%;
+}
+
+button{
+margin-top:20px;
+padding:10px 20px;
+background:#2c7be5;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1a5bbf;
+}
+
+</style>
+
+<script>
+
+let current = 0;
+
+function showQuestion(index){
+let q = document.getElementsByClassName("question");
+for(let i=0;i<q.length;i++){
+q[i].classList.remove("active");
+}
+q[index].classList.add("active");
+
+let progress = ((index)/(q.length-1))*100;
+document.getElementById("progressBar").style.width = progress + "%";
+}
+
+function nextQuestion(){
+
+let currentQ = document.getElementsByClassName("question")[current];
+
+// validation
+let inputs = currentQ.querySelectorAll("input, select");
+let valid = false;
+
+inputs.forEach(el=>{
+if((el.type==="radio" && el.checked) || (el.tagName==="SELECT" && el.value!=="") || (el.type==="text" && el.value!=="")){
+valid = true;
+}
+});
+
+if(!valid){
+alert("Please answer before proceeding.");
+return;
+}
+
+current++;
+
+let total = document.getElementsByClassName("question").length;
+
+if(current < total){
+showQuestion(current);
+}else{
+document.getElementById("form").style.display="none";
+document.getElementById("end").style.display="block";
+}
+
+}
+
+window.onload = function(){
+showQuestion(0);
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Urban Infrastructure & Living Conditions Survey</h1>
+
+<div class="progress">
+<div id="progressBar" class="progress-bar"></div>
+</div>
+
+<div id="form">
+
+<!-- DEMOGRAPHICS -->
+
+<div class="question">
+<p><b>1. Age group</b></p>
+<select>
+<option value="">Select</option>
+<option>18–25</option>
+<option>26–40</option>
+<option>41–60</option>
+<option>60+</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="question">
+<p><b>2. Household income (monthly)</b></p>
+<select>
+<option value="">Select</option>
+<option>< ₹25,000</option>
+<option>₹25,000–₹50,000</option>
+<option>₹50,000–₹1,00,000</option>
+<option>> ₹1,00,000</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="question">
+<p><b>3. Type of residence</b></p>
+<input type="radio"> Owned<br>
+<input type="radio"> Rented<br>
+<input type="radio"> Government housing<br>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- HOUSEHOLD -->
+
+<div class="question">
+<p><b>4. Household size</b></p>
+<select>
+<option value="">Select</option>
+<option>1–2</option>
+<option>3–5</option>
+<option>6–8</option>
+<option>>8</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="question">
+<p><b>5. Number of vehicles in household</b></p>
+<select>
+<option value="">Select</option>
+<option>0</option>
+<option>1</option>
+<option>2</option>
+<option>3+</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- WATER -->
+
+<div class="question">
+<p><b>6. Primary source of water supply</b></p>
+<select>
+<option value="">Select</option>
+<option>Piped supply</option>
+<option>Borewell</option>
+<option>Tanker</option>
+<option>Other</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="question">
+<p><b>7. Reliability of water supply</b></p>
+<input type="radio"> Very poor
+<input type="radio"> Poor
+<input type="radio"> Average
+<input type="radio"> Good
+<input type="radio"> Excellent
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- DRAINAGE -->
+
+<div class="question">
+<p><b>8. Drainage condition in your area</b></p>
+<input type="radio"> Very poor
+<input type="radio"> Poor
+<input type="radio"> Average
+<input type="radio"> Good
+<input type="radio"> Excellent
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="question">
+<p><b>9. Frequency of waterlogging</b></p>
+<select>
+<option value="">Select</option>
+<option>Never</option>
+<option>Occasionally</option>
+<option>Frequently</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- ROADS -->
+
+<div class="question">
+<p><b>10. Road condition near your residence</b></p>
+<input type="radio"> Very poor
+<input type="radio"> Poor
+<input type="radio"> Average
+<input type="radio"> Good
+<input type="radio"> Excellent
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- WASTE -->
+
+<div class="question">
+<p><b>11. Waste collection service</b></p>
+<select>
+<option value="">Select</option>
+<option>Daily</option>
+<option>Alternate days</option>
+<option>Irregular</option>
+<option>None</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- PERCEPTION -->
+
+<div class="question">
+<p><b>12. Overall satisfaction with urban infrastructure</b></p>
+<input type="radio">1
+<input type="radio">2
+<input type="radio">3
+<input type="radio">4
+<input type="radio">5
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="question">
+<p><b>13. What is the biggest issue in your area?</b></p>
+<select>
+<option value="">Select</option>
+<option>Water supply</option>
+<option>Drainage</option>
+<option>Roads</option>
+<option>Waste management</option>
+<option>Traffic</option>
+</select>
+<button onclick="nextQuestion()">Next</button>
+</div>
+
+<div class="question">
+<p><b>14. Suggestions for improvement</b></p>
+<input type="text" placeholder="Write your answer" style="width:100%;">
+<button onclick="nextQuestion()">Submit</button>
+</div>
+
+</div>
+
+<div id="end" style="display:none;">
+<h2>Thank you!</h2>
+<p>Your response has been recorded.</p>
+</div>
+
+</div>
+
+</body>
+
+</html>
