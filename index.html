@@ -5,7 +5,6 @@
 <title>Urban Infrastructure Survey</title>
 
 <style>
-
 body{
 font-family: Arial;
 background:#eef2f5;
@@ -21,18 +20,10 @@ border-radius:10px;
 box-shadow:0 0 12px grey;
 }
 
-h1{
-text-align:center;
-}
+h1{text-align:center;}
 
-.question{
-display:none;
-margin-top:20px;
-}
-
-.active{
-display:block;
-}
+.question{display:none; margin-top:20px;}
+.active{display:block;}
 
 .progress{
 background:#ddd;
@@ -57,11 +48,6 @@ border:none;
 border-radius:5px;
 cursor:pointer;
 }
-
-button:hover{
-background:#1a5bbf;
-}
-
 </style>
 
 <script>
@@ -70,9 +56,7 @@ let current = 0;
 
 function showQuestion(index){
 let q = document.getElementsByClassName("question");
-for(let i=0;i<q.length;i++){
-q[i].classList.remove("active");
-}
+for(let i=0;i<q.length;i++){ q[i].classList.remove("active"); }
 q[index].classList.add("active");
 
 let progress = ((index)/(q.length-1))*100;
@@ -80,34 +64,45 @@ document.getElementById("progressBar").style.width = progress + "%";
 }
 
 function nextQuestion(){
-
-let currentQ = document.getElementsByClassName("question")[current];
-
-// validation
-let inputs = currentQ.querySelectorAll("input, select");
-let valid = false;
-
-inputs.forEach(el=>{
-if((el.type==="radio" && el.checked) || (el.tagName==="SELECT" && el.value!=="") || (el.type==="text" && el.value!=="")){
-valid = true;
-}
-});
-
-if(!valid){
-alert("Please answer before proceeding.");
-return;
-}
-
 current++;
-
 let total = document.getElementsByClassName("question").length;
 
 if(current < total){
 showQuestion(current);
 }else{
+submitSurvey();
 document.getElementById("form").style.display="none";
 document.getElementById("end").style.display="block";
 }
+}
+
+function submitSurvey(){
+
+let data = {
+
+age: document.getElementById("age").value,
+income: document.getElementById("income").value,
+residence: document.querySelector('input[name="residence"]:checked')?.value,
+household: document.getElementById("household").value,
+vehicles: document.getElementById("vehicles").value,
+waterSource: document.getElementById("waterSource").value,
+waterReliability: document.querySelector('input[name="waterReliability"]:checked')?.value,
+drainage: document.querySelector('input[name="drainage"]:checked')?.value,
+waterlogging: document.getElementById("waterlogging").value,
+road: document.querySelector('input[name="road"]:checked')?.value,
+waste: document.getElementById("waste").value,
+satisfaction: document.querySelector('input[name="satisfaction"]:checked')?.value,
+issue: document.getElementById("issue").value,
+suggestion: document.getElementById("suggestion").value
+
+};
+
+fetch("https://script.google.com/macros/s/AKfycbxkKvixHyR_nsvm4J2r_UfxuSIqpOcLnoBuJFMk8sbEQDZFDGepcFmXDaVQS-7NU6Rm/exec", {
+method: "POST",
+body: JSON.stringify(data)
+});
+
+alert("Response submitted successfully!");
 
 }
 
@@ -123,7 +118,7 @@ showQuestion(0);
 
 <div class="container">
 
-<h1>Urban Infrastructure & Living Conditions Survey</h1>
+<h1>Urban Infrastructure Survey</h1>
 
 <div class="progress">
 <div id="progressBar" class="progress-bar"></div>
@@ -131,57 +126,56 @@ showQuestion(0);
 
 <div id="form">
 
-<!-- DEMOGRAPHICS -->
-
+<!-- Q1 -->
 <div class="question">
-<p><b>1. Age group</b></p>
-<select>
+<p>Age</p>
+<select id="age">
 <option value="">Select</option>
-<option>18–25</option>
-<option>26–40</option>
-<option>41–60</option>
+<option>18-25</option>
+<option>26-40</option>
+<option>41-60</option>
 <option>60+</option>
 </select>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
+<!-- Q2 -->
 <div class="question">
-<p><b>2. Household income (monthly)</b></p>
-<select>
+<p>Income</p>
+<select id="income">
 <option value="">Select</option>
-<option>< ₹25,000</option>
-<option>₹25,000–₹50,000</option>
-<option>₹50,000–₹1,00,000</option>
-<option>> ₹1,00,000</option>
+<option><25000</option>
+<option>25000-50000</option>
+<option>50000-100000</option>
+<option>>100000</option>
 </select>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
+<!-- Q3 -->
 <div class="question">
-<p><b>3. Type of residence</b></p>
-<input type="radio"> Owned<br>
-<input type="radio"> Rented<br>
-<input type="radio"> Government housing<br>
+<p>Residence</p>
+<input type="radio" name="residence" value="Owned">Owned<br>
+<input type="radio" name="residence" value="Rented">Rented<br>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
-<!-- HOUSEHOLD -->
-
+<!-- Q4 -->
 <div class="question">
-<p><b>4. Household size</b></p>
-<select>
+<p>Household size</p>
+<select id="household">
 <option value="">Select</option>
-<option>1–2</option>
-<option>3–5</option>
-<option>6–8</option>
-<option>>8</option>
+<option>1-2</option>
+<option>3-5</option>
+<option>6+</option>
 </select>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
+<!-- Q5 -->
 <div class="question">
-<p><b>5. Number of vehicles in household</b></p>
-<select>
+<p>Vehicles</p>
+<select id="vehicles">
 <option value="">Select</option>
 <option>0</option>
 <option>1</option>
@@ -191,107 +185,97 @@ showQuestion(0);
 <button onclick="nextQuestion()">Next</button>
 </div>
 
-<!-- WATER -->
-
+<!-- Q6 -->
 <div class="question">
-<p><b>6. Primary source of water supply</b></p>
-<select>
+<p>Water source</p>
+<select id="waterSource">
 <option value="">Select</option>
-<option>Piped supply</option>
+<option>Piped</option>
 <option>Borewell</option>
 <option>Tanker</option>
-<option>Other</option>
 </select>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
+<!-- Q7 -->
 <div class="question">
-<p><b>7. Reliability of water supply</b></p>
-<input type="radio"> Very poor
-<input type="radio"> Poor
-<input type="radio"> Average
-<input type="radio"> Good
-<input type="radio"> Excellent
+<p>Water reliability</p>
+<input type="radio" name="waterReliability" value="Poor">Poor
+<input type="radio" name="waterReliability" value="Average">Average
+<input type="radio" name="waterReliability" value="Good">Good
 <button onclick="nextQuestion()">Next</button>
 </div>
 
-<!-- DRAINAGE -->
-
+<!-- Q8 -->
 <div class="question">
-<p><b>8. Drainage condition in your area</b></p>
-<input type="radio"> Very poor
-<input type="radio"> Poor
-<input type="radio"> Average
-<input type="radio"> Good
-<input type="radio"> Excellent
+<p>Drainage condition</p>
+<input type="radio" name="drainage" value="Poor">Poor
+<input type="radio" name="drainage" value="Average">Average
+<input type="radio" name="drainage" value="Good">Good
 <button onclick="nextQuestion()">Next</button>
 </div>
 
+<!-- Q9 -->
 <div class="question">
-<p><b>9. Frequency of waterlogging</b></p>
-<select>
+<p>Waterlogging frequency</p>
+<select id="waterlogging">
 <option value="">Select</option>
 <option>Never</option>
-<option>Occasionally</option>
-<option>Frequently</option>
+<option>Occasional</option>
+<option>Frequent</option>
 </select>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
-<!-- ROADS -->
-
+<!-- Q10 -->
 <div class="question">
-<p><b>10. Road condition near your residence</b></p>
-<input type="radio"> Very poor
-<input type="radio"> Poor
-<input type="radio"> Average
-<input type="radio"> Good
-<input type="radio"> Excellent
+<p>Road condition</p>
+<input type="radio" name="road" value="Poor">Poor
+<input type="radio" name="road" value="Average">Average
+<input type="radio" name="road" value="Good">Good
 <button onclick="nextQuestion()">Next</button>
 </div>
 
-<!-- WASTE -->
-
+<!-- Q11 -->
 <div class="question">
-<p><b>11. Waste collection service</b></p>
-<select>
+<p>Waste collection</p>
+<select id="waste">
 <option value="">Select</option>
 <option>Daily</option>
-<option>Alternate days</option>
 <option>Irregular</option>
 <option>None</option>
 </select>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
-<!-- PERCEPTION -->
-
+<!-- Q12 -->
 <div class="question">
-<p><b>12. Overall satisfaction with urban infrastructure</b></p>
-<input type="radio">1
-<input type="radio">2
-<input type="radio">3
-<input type="radio">4
-<input type="radio">5
+<p>Overall satisfaction</p>
+<input type="radio" name="satisfaction" value="1">1
+<input type="radio" name="satisfaction" value="2">2
+<input type="radio" name="satisfaction" value="3">3
+<input type="radio" name="satisfaction" value="4">4
+<input type="radio" name="satisfaction" value="5">5
 <button onclick="nextQuestion()">Next</button>
 </div>
 
+<!-- Q13 -->
 <div class="question">
-<p><b>13. What is the biggest issue in your area?</b></p>
-<select>
+<p>Main issue</p>
+<select id="issue">
 <option value="">Select</option>
-<option>Water supply</option>
+<option>Water</option>
 <option>Drainage</option>
-<option>Roads</option>
-<option>Waste management</option>
-<option>Traffic</option>
+<option>Road</option>
+<option>Waste</option>
 </select>
 <button onclick="nextQuestion()">Next</button>
 </div>
 
+<!-- Q14 -->
 <div class="question">
-<p><b>14. Suggestions for improvement</b></p>
-<input type="text" placeholder="Write your answer" style="width:100%;">
+<p>Suggestion</p>
+<input type="text" id="suggestion">
 <button onclick="nextQuestion()">Submit</button>
 </div>
 
@@ -299,7 +283,6 @@ showQuestion(0);
 
 <div id="end" style="display:none;">
 <h2>Thank you!</h2>
-<p>Your response has been recorded.</p>
 </div>
 
 </div>
